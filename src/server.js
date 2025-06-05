@@ -51,12 +51,6 @@ export function setupServer() {
     });
   });
 
-  app.use('*', (req, res) => {
-    res.status(404).json({
-      message: 'Contact not found',
-    });
-  });
-
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
