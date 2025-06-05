@@ -23,7 +23,7 @@ export function setupServer() {
 
   app.get('/', (req, res) => {
     res.status(200).json({
-      message: 'Server is running, use endpoint \'/contacts\' and \'/contacts/:contactId',
+      message: 'Server is running',
     });
   });
 
@@ -35,7 +35,8 @@ export function setupServer() {
       data: contacts,
     });
   });
-  app.get('/contacts/:contactsId', async (req, res) => {
+
+  app.get('/contacts/:contactId', async (req, res) => {
     const {contactId} = req.params;
     const contact = await getcontactById(contactId);
 
