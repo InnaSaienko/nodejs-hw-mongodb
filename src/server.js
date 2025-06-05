@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import { getEnvVar } from './utils/getEnvVar';
-import { getAllContacts } from './services/contacts';
-import { getcontactsById } from './services/contactId';
+import { getEnvVar } from './utils/getEnvVar.js';
+import { getAllContacts } from './services/contacts.js';
+import { getcontactById } from './services/contactId.js';
 
 const PORT = Number(getEnvVar('PORT', 3000));
 
@@ -37,7 +37,7 @@ export function setupServer() {
   });
   app.get('/contacts/:contactsId', async (req, res) => {
     const {contactId} = req.params;
-    const contact = await getcontactsById(contactId);
+    const contact = await getcontactById(contactId);
 
     if (!contact) {
       res.status(404).json({message: `Contact with ${contactId} not found`});
