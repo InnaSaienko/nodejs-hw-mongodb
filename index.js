@@ -1,4 +1,4 @@
-import { initMongoDB } from './src/db/initMongoConnection';
+import { initMongoDB } from './src/db/initMongoConnection.js';
 import { setupServer } from './src/server';
 
 
