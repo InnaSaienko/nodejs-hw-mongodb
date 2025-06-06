@@ -22,7 +22,7 @@ export function setupServer() {
 
   app.get('/', (req, res) => {
     res.status(200).json({
-      message: 'Server is running, use endpoint \'/contacts\' and \'/contacts/:contactId',
+      message: 'Server is running',
     });
   });
 
@@ -48,12 +48,6 @@ export function setupServer() {
       status: 200,
       message: `Successfully found contact with id ${contactId}!`,
       data: contact,
-    });
-  });
-
-  app.use('*', (req, res) => {
-    res.status(404).json({
-      message: 'Contact not found',
     });
   });
 
