@@ -14,3 +14,7 @@ export const createContact = async (payload) => {
  const contact = await ContactsList.create(payload);
  return contact;
 };
+
+export const updateContact = async (payload) => {
+
+};
