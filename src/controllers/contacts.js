@@ -1,4 +1,10 @@
-import { createContact, getAllContacts, getContactById, updateContact } from '../services/contactService.js';
+import {
+  createContact,
+  deleteContactById,
+  getAllContacts,
+  getContactById,
+  updateContact,
+} from '../services/contactService.js';
 import createHttpError from 'http-errors';
 
 export const getContactsController = async (req, res, next) => {
@@ -60,4 +66,11 @@ export const patchContactController = async (req, res, next) => {
     data: result.contact,
   });
 
+};
+
+export const deleteContactController = async (req, res) => {
+  const { contactId } = req.params;
+  await deleteContactById(contactId);
+
+  res.status(204).send();
 };
