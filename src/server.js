@@ -27,7 +27,7 @@ export function setupServer() {
     });
   });
 
-  app.use(contacsRouter);
+  app.use('/contacts', contacsRouter);
   // app.use('*', notFoundHandler);
   app.use(errorHandler);
 
