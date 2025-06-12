@@ -8,12 +8,13 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../validation/validateBody.js';
 import { createContactSchema, updateContactSchema } from '../validation/validationSchemaContact.js';
+import { isValidId } from '../middlewares/isValidId.js';
 
 const router = Router();
 
-router.get('/', ctrlWrapper(getContactsController));
+router.get('/', isValidId, ctrlWrapper(getContactsController));
 
-router.get('/:contactId', ctrlWrapper(getContactsByIdController));
+router.get('/:contactId', isValidId, ctrlWrapper(getContactsByIdController));
 
 router.post('/', validateBody(createContactSchema), ctrlWrapper(createContactController));
 
