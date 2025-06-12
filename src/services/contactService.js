@@ -21,6 +21,8 @@ export const updateContact = async (contactId, payload, options = {}) => {
     payload,
     {
       new: true, //new: returns the updated document if true
+      runValidators: true,
+      context: 'query',
       includeResultMetadata: true, // returns a ModifyResult type that contains the found document and metadata.
       ...options,
     },
