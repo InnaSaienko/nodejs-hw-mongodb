@@ -1,13 +1,13 @@
 import {Router} from "express";
-// import {loginUserSchema, registerUserSchema} from "../validation/validationShemaAuth.js";
+import {loginUserSchema, registerUserSchema} from "../validation/validationSchemaAuth.js";
 import {validateBody} from "../validation/validateBody.js";
 import {ctrlWrapper} from "../utils/ctrlWrapper.js";
-// import {
-//     loginUserController,
-//     logoutUserController,
-//     refreshUserSessionController,
-//     registerUserController
-// } from "../controllers/authControllers.js";
+import {
+    loginUserController,
+    logoutUserController,
+    refreshUserSessionController,
+    registerUserController
+} from "../controllers/authControllers.js";
 
 const authRouter = Router();
 
