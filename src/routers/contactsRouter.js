@@ -4,7 +4,7 @@ import {
   getContactsByIdController,
   getContactsController,
   patchContactController,
-} from '../controllers/contacts.js';
+} from '../controllers/contactsControllers.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../validation/validateBody.js';
 import { createContactSchema, updateContactSchema } from '../validation/validationSchemaContact.js';
