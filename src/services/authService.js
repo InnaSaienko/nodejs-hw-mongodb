@@ -28,7 +28,6 @@ export const registerUser = async (payload) => {
 
 export const loginUser = async (payload) => {
     const user = await UsersCollection.findOne({email: payload.email});
-    console.log("user: ", user);
     if (!user) {
         throw createHttpError(404, 'User not found');
     }
@@ -40,7 +39,7 @@ export const loginUser = async (payload) => {
 
     await SessionsCollection.deleteOne({userId: user._id});
     const session = await SessionsCollection.create({userId: user._id, ...createSession()});
-    console.log("session's accessToken login is: ", session.accessToken);
+
     return {
         session,
         user: {
@@ -57,7 +56,6 @@ export const logoutUser = async (sessionId) => {
 export const refreshUsersSession = async ({accessToken}) => {
 
     const session = await SessionsCollection.findOne({accessToken});
-    console.log("founded session: ", session);
     if (!session) {
         throw createHttpError(401, 'refresh Users Session not found');
     }
@@ -66,7 +64,6 @@ export const refreshUsersSession = async ({accessToken}) => {
         new Date() > new Date(session.refreshTokenValidUntil);
 
     const sessionId = session._id;
-    console.log("sessionId is: ", sessionId);
     if (!sessionId) {throw createHttpError(400, 'Missing sessionId in session');}
 
     if (isSessionTokenExpired) {
