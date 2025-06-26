@@ -1,21 +1,25 @@
 import { ContactsList } from '../db/models/contactModel.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {} }) => {
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, userId }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
+  console.log("TYPE of userId:", typeof userId, "Value:", userId);
 
-  const contactsQuery = ContactsList.find();
+  const queryConditions = { userId };
 
   if (filter.contactType !== null) {
-    contactsQuery.where('contactType').equals(filter.contactType);
-  }
-  if (filter.isFavourite !== null) {
-    contactsQuery.where('isFavourite').equals(filter.isFavourite);
+    queryConditions.contactType = filter.contactType;
   }
 
+  if (filter.isFavourite !== null) {
+    queryConditions.isFavourite = filter.isFavourite;
+  }
+
+  const contactsQuery = ContactsList.find(queryConditions);
+
   const [contactsCounts, contacts] = await Promise.all([
-    ContactsList.find().merge(contactsQuery).countDocuments(),
+    ContactsList.countDocuments(contactsQuery),
     contactsQuery.skip(skip).limit(limit).sort(sortBy ? { [sortBy]: sortOrder } : {}).exec(),
   ]);
 
@@ -26,6 +30,7 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
     ...paginationData,
   };
 };
+
 export const getContactById = async (contactsId) => {
   const contacts = await ContactsList.findById(contactsId);
   return contacts;
