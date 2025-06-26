@@ -1,6 +1,6 @@
-import { model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
-const contactModel = new Schema({
+const contactModel = new mongoose.Schema({
       name: { type: String, required: true },
       phoneNumber: { type: String, required: true },
       email: { type: String, required: false },
@@ -8,9 +8,10 @@ const contactModel = new Schema({
       contactType: {
         type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal',
       },
+      userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     },
-    { timestamps: true } // add keys and value createdAt and updatedAt
-    )
+    { timestamps: true }, // add keys and value createdAt and updatedAt
+  )
 ;
 
-export const ContactsList = model('contacts', contactModel);
+export const ContactsList = mongoose.model('contacts', contactModel);
