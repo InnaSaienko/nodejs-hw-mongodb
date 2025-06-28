@@ -1,10 +1,10 @@
 import { ContactsList } from '../db/models/contactModel.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
+import createHttpError from 'http-errors';
 
 export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, userId }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
-  console.log("TYPE of userId:", typeof userId, "Value:", userId);
 
   const queryConditions = { userId };
 
@@ -32,7 +32,10 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
 };
 
 export const getContactById = async (contactsId) => {
-  const contacts = await ContactsList.findById(contactsId);
+  const contacts = await ContactsList.findOne(contactsId);
+  if (!contacts) {
+    throw createHttpError(404, 'Student not found!');
+  }
   return contacts;
 };
 
@@ -41,26 +44,19 @@ export const createContact = async (payload) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, options = {}) => {
-  const unprocessedContact = await ContactsList.findOneAndUpdate(
-    { '_id': contactId },
-    payload,
-    {
-      new: true, //new: returns the updated document if true
-      runValidators: true,
-      context: 'query',
-      includeResultMetadata: true, // returns a ModifyResult type that contains the found document and metadata.
-      ...options,
+export const updateContact = async (contactId, payload) => {
+
+  const contact = await ContactsList.findOneAndUpdate(
+    { '_id': contactId }, payload,{
+      new: true,
     },
   );
-  if (!unprocessedContact) return null;
 
-  return {
-    contact: unprocessedContact,
-    isNew: false,
-  };
+  if (!contact) throw createHttpError(404, 'Contact not found!');
+
+  return contact;
 };
 
 export const deleteContactById = async (contactId) => {
-  return await ContactsList.findOneAndDelete({ _id: contactId });
+  return await ContactsList.findByIdAndDelete({ _id: contactId });
 };
