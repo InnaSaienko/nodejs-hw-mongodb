@@ -30,7 +30,6 @@ export const getContactsController = async (req, res, next) => {
 
 export const getContactsByIdController = async (req, res) => {
   const { contactId } = req.params;
-
   const contact = await getContactById(contactId);
 
   if (!contact) {
@@ -47,7 +46,6 @@ export const getContactsByIdController = async (req, res) => {
 export const createContactController = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    console.log("user req id: ", userId);
     const contact = await createContact({...req.body, userId });
     res.status(201).json({
       status: 201,
@@ -71,7 +69,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: result.contact.value,
+    data: result.contact,
   });
 
 };

@@ -31,12 +31,12 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter 
   };
 };
 
-export const getContactById = async (contactsId) => {
-  const contacts = await ContactsList.findOne(contactsId);
-  if (!contacts) {
+export const getContactById = async (contactId) => {
+  const contact = await ContactsList.findById(contactId);
+  if (!contact) {
     throw createHttpError(404, 'Student not found!');
   }
-  return contacts;
+  return contact;
 };
 
 export const createContact = async (payload) => {
