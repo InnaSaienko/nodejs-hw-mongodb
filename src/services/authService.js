@@ -105,7 +105,7 @@ export const requestResetPasswordByEmail = async (email) => {
   const template = Handlebars.compile(fileContent);
   const html = template({
     name: user.name,
-    link: `${getEnvVar(ENV_VARS.FRONTEND_DOMAIN)}/reset-password?token=${token}`,
+    link: `${getEnvVar(ENV_VARS.APP_DOMAIN)}/reset-password?token=${token}`,
   });
   await sendEmail({ email, html, subject: 'Reset your password!' });
 };
