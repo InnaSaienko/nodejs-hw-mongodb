@@ -5,8 +5,9 @@ import { getEnvVar } from './utils/getEnvVar.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/routerGlobal.js';
 import cookieParser from "cookie-parser";
+import { ENV_VARS } from './constants/envVar.js';
 
-const PORT = Number(getEnvVar('PORT', 3000));
+const PORT = Number(getEnvVar(ENV_VARS.PORT, 3000));
 
 export function setupServer() {
   const app = express();

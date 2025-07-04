@@ -1,4 +1,10 @@
-import {loginUser, logoutUser, refreshUsersSession, registerUser} from '../services/authService.js';
+import {
+    loginUser,
+    logoutUser,
+    refreshUsersSession,
+    registerUser,
+    requestResetPasswordByEmail,
+} from '../services/authService.js';
 import {ONE_DAY} from "../constants/timeConstants.js";
 
 const setupSessionCookies = (res, session) => {
@@ -62,4 +68,16 @@ export const refreshUserSessionController = async (req, res) => {
             },
         });
 
+};
+
+export const requestResetPasswordByEmailController = async (req, res) => {
+    const { email } = req.body;
+    console.log("ResetPasswordByEmailController body: ", email);
+    await requestResetPasswordByEmail(email);
+
+    res.send({
+        status: 200,
+        message: 'Reset password email was successfully sent!',
+        data: {},
+    });
 };

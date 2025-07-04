@@ -1,9 +1,17 @@
-import { UsersCollection } from '../db/models/user.js';
+import { UsersCollection } from '../db/models/userSchema.js';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import createHttpError from 'http-errors';
-import { SessionsCollection } from '../db/models/session.js';
+import { SessionsCollection } from '../db/models/sessionSchema.js';
 import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/timeConstants.js';
+import jwt from 'jsonwebtoken';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { ENV_VARS } from '../constants/envVar.js';
+import { sendEmail } from '../utils/sendMail.js';
+import Handlebars from 'handlebars';
+import * as path from 'node:path';
+import fs from 'fs/promises';
+import { TEMPLATE_DIR } from '../constants/path.js';
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -44,7 +52,7 @@ export const loginUser = async (payload) => {
 };
 
 export const logoutUser = async (sessionId, refreshToken) => {
-  await SessionsCollection.findOneAndDelete({ _id: sessionId, refreshToken});
+  await SessionsCollection.findOneAndDelete({ _id: sessionId, refreshToken });
 };
 
 export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
@@ -72,4 +80,35 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
     userId: session.userId,
     ...newSession,
   });
+};
+
+export const requestResetPasswordByEmail = async (email) => {
+  const user = await UsersCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(401, 'Can\'t reset password for this user');
+  }
+
+  const token = jwt.sign(
+    {
+      sub: user._id,
+      email: user.email,
+      role: user.role,
+    },
+    getEnvVar(ENV_VARS.JWT_SECRET),
+    {
+      expiresIn: '15m',
+    },
+  );
+  console.log('token jwt: ', token);
+  const filePath = path.join(TEMPLATE_DIR, 'resetPasswordByEmailTemplate.html');
+  const fileContent = await fs.readFile(filePath, 'utf-8');
+
+  const template = Handlebars.compile(fileContent);
+  console.log('user from DB:', user);
+  const html = template({
+    name: user.name,
+    link: `${getEnvVar(ENV_VARS.FRONTEND_DOMAIN)}/reset-password?token=${token}`,
+  });
+  console.log('HTML output:', html);
+  await sendEmail({ email, html, subject: 'Reset your password!' });
 };
