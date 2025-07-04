@@ -99,16 +99,13 @@ export const requestResetPasswordByEmail = async (email) => {
       expiresIn: '15m',
     },
   );
-  console.log('token jwt: ', token);
   const filePath = path.join(TEMPLATE_DIR, 'resetPasswordByEmailTemplate.html');
   const fileContent = await fs.readFile(filePath, 'utf-8');
 
   const template = Handlebars.compile(fileContent);
-  console.log('user from DB:', user);
   const html = template({
     name: user.name,
     link: `${getEnvVar(ENV_VARS.FRONTEND_DOMAIN)}/reset-password?token=${token}`,
   });
-  console.log('HTML output:', html);
   await sendEmail({ email, html, subject: 'Reset your password!' });
 };
