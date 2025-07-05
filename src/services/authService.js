@@ -109,3 +109,25 @@ export const requestResetPasswordByEmail = async (email) => {
   });
   await sendEmail({ email, html, subject: 'Reset your password!' });
 };
+
+export const resetPassword = async ({ token, password }) => {
+  let tokenPayload;
+
+  try {
+    tokenPayload = jwt.verify(token, getEnvVar(ENV_VARS.JWT_SECRET));
+  } catch (err) {
+    console.log(err);
+    throw createHttpError(401, 'JWT Token is expired or invalid.');
+  }
+
+  const user = await UsersCollection.findById(tokenPayload.sub);
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await UsersCollection.findByIdAndUpdate(tokenPayload.sub, { password: hashedPassword });
+  await SessionsCollection.findOneAndDelete({ userId: tokenPayload.sub });
+};
