@@ -3,7 +3,7 @@ import {
   logoutUser,
   refreshUsersSession,
   registerUser,
-  requestResetPasswordByEmail,
+  requestResetPasswordByEmail, resetPassword,
 } from '../services/authService.js';
 import { ONE_DAY } from '../constants/timeConstants.js';
 
@@ -77,6 +77,15 @@ export const requestResetPasswordByEmailController = async (req, res) => {
   res.send({
     status: 200,
     message: 'Reset password email was successfully sent!',
+    data: {},
+  });
+};
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+
+  res.send({
+    status: 200,
+    message: 'Password has been successfully reset.',
     data: {},
   });
 };
