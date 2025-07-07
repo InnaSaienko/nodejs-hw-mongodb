@@ -3,20 +3,21 @@ import {
   deleteContactById,
   getAllContacts,
   getContactById,
-  updateContact, uploadContactAvatar,
+  updateContact,
 } from '../services/contactService.js';
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFile } from '../utils/save-file.js';
 
 export const getContactsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
-  const userId = req.user._id;
+  const parentId = req.user._id;
   try {
-    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder, filter, userId });
+    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder, filter, parentId });
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
@@ -44,8 +45,15 @@ export const getContactsByIdController = async (req, res) => {
 
 export const createContactController = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const contact = await createContact({...req.body, userId });
+    const { file, body, user } = req;
+    const parentId = user._id;
+    const photo = file;
+    let photoUrl;
+    if (photo) {
+      photoUrl = await saveFile(photo);
+    }
+
+    const contact = await createContact({...body, parentId, photo: photoUrl });
     res.status(201).json({
       status: 201,
       message: `Successfully created a contact!`,
@@ -58,7 +66,13 @@ export const createContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body);
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    photoUrl = await saveFile(photo);
+  }
+  const result = await updateContact(contactId, { ...req.body, photo: photoUrl });
 
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
@@ -68,7 +82,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: result.contact,
+    data: result,
   });
 
 };
@@ -86,15 +100,4 @@ export const deleteContactController = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-export const uploadContactAvatarController = async (req, res,) => {
-const { contactId } = req.params;
-const contact = await uploadContactAvatar(contactId, req.file);
-
-  res.json({
-    status: 200,
-    message: `Successfully updated contact with id ${req.params.contactId} !`,
-    data: contact,
-  });
 };

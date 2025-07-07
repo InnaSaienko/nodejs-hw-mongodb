@@ -1,13 +1,12 @@
 import { ContactsList } from '../db/models/contactSchema.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import createHttpError from 'http-errors';
-import { saveFile } from '../utils/save-file.js';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, userId }) => {
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, parentId }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const queryConditions = { userId };
+  const queryConditions = { parentId };
 
   if (filter.contactType !== null) {
     queryConditions.contactType = filter.contactType;
@@ -40,6 +39,7 @@ export const getContactById = async (contactId) => {
 };
 
 export const createContact = async (payload) => {
+
   const contact = await ContactsList.create(payload);
   return contact;
 };
@@ -59,18 +59,4 @@ export const updateContact = async (contactId, payload) => {
 
 export const deleteContactById = async (contactId) => {
   return await ContactsList.findByIdAndDelete({ _id: contactId });
-};
-
-export const uploadContactAvatar = async (contactId, file) => {
-  const url = await saveFile(file);
-
-  const contact = await ContactsList.findByIdAndUpdate(
-    contactId,
-    {
-      photo: url,
-    },
-    { new: true },
-  );
-
-  return contact;
 };

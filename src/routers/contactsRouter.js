@@ -3,7 +3,7 @@ import {
   createContactController, deleteContactController,
   getContactsByIdController,
   getContactsController,
-  patchContactController, uploadContactAvatarController,
+  patchContactController,
 } from '../controllers/contactsControllers.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../validation/validateBody.js';
@@ -20,11 +20,9 @@ contactsRouter.get('/', ctrlWrapper(getContactsController));
 
 contactsRouter.get('/:contactId', isValidId, ctrlWrapper(getContactsByIdController));
 
-contactsRouter.post('/', validateBody(createContactSchema), ctrlWrapper(createContactController));
+contactsRouter.post('/', upload.single('photo'), validateBody(createContactSchema), ctrlWrapper(createContactController));
 
-contactsRouter.patch('/:contactId', isValidId, validateBody(updateContactSchema), ctrlWrapper(patchContactController));
-
-contactsRouter.post('/:contactId/upload-avatar', upload.single('avatarUrl'), uploadContactAvatarController);
+contactsRouter.patch('/:contactId', isValidId, upload.single('photo'), validateBody(updateContactSchema), ctrlWrapper(patchContactController));
 
 contactsRouter.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 

@@ -8,10 +8,10 @@ const contactSchema = new mongoose.Schema({
     contactType: {
       type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal',
     },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    photo: { type: String, required: false },
+    parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    photo: { type: String, required: true },
   },
-  { timestamps: true }, // add keys and value createdAt and updatedAt
+  { timestamps: true, versionKey: false }, // add keys and value createdAt and updatedAt
 );
 
 export const ContactsList = mongoose.model('contacts', contactSchema);

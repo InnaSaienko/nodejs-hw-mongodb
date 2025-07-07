@@ -45,8 +45,8 @@ export const loginUser = async (payload) => {
     throw createHttpError(401, 'Password doesn\'t match');
   }
 
-  await SessionsCollection.deleteOne({ userId: user._id });
-  const session = await SessionsCollection.create({ userId: user._id, ...createSession() });
+  await SessionsCollection.deleteOne({ parentId: user._id });
+  const session = await SessionsCollection.create({ parentId: user._id, ...createSession() });
 
   return session;
 };
@@ -77,7 +77,7 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
   await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
 
   return await SessionsCollection.create({
-    userId: session.userId,
+    parentId: session.parentId,
     ...newSession,
   });
 };
@@ -129,5 +129,5 @@ export const resetPassword = async ({ token, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await UsersCollection.findByIdAndUpdate(tokenPayload.sub, { password: hashedPassword });
-  await SessionsCollection.findOneAndDelete({ userId: tokenPayload.sub });
+  await SessionsCollection.findOneAndDelete({ parentId: tokenPayload.sub });
 };
