@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema({
-      name: { type: String, required: true },
-      phoneNumber: { type: String, required: true },
-      email: { type: String, required: false },
-      isFavourite: { type: Boolean, default: false },
-      contactType: {
-        type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal',
-      },
-      userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    name: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    email: { type: String, required: false },
+    isFavourite: { type: Boolean, default: false },
+    contactType: {
+      type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal',
     },
-    { timestamps: true }, // add keys and value createdAt and updatedAt
-  )
-;
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    photo: { type: String, required: false },
+  },
+  { timestamps: true }, // add keys and value createdAt and updatedAt
+);
 
 export const ContactsList = mongoose.model('contacts', contactSchema);

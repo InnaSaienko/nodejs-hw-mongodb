@@ -3,13 +3,14 @@ import {
   createContactController, deleteContactController,
   getContactsByIdController,
   getContactsController,
-  patchContactController,
+  patchContactController, uploadContactAvatarController,
 } from '../controllers/contactsControllers.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { validateBody } from '../validation/validateBody.js';
 import { createContactSchema, updateContactSchema } from '../validation/validationSchemaContact.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/upload-files.js';
 
 const contactsRouter = Router();
 
@@ -22,6 +23,8 @@ contactsRouter.get('/:contactId', isValidId, ctrlWrapper(getContactsByIdControll
 contactsRouter.post('/', validateBody(createContactSchema), ctrlWrapper(createContactController));
 
 contactsRouter.patch('/:contactId', isValidId, validateBody(updateContactSchema), ctrlWrapper(patchContactController));
+
+contactsRouter.post('/:contactId/upload-avatar', upload.single('avatarUrl'), uploadContactAvatarController);
 
 contactsRouter.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 

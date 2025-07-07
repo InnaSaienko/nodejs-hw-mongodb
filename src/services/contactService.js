@@ -1,6 +1,7 @@
 import { ContactsList } from '../db/models/contactSchema.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import createHttpError from 'http-errors';
+import { saveFile } from '../utils/save-file.js';
 
 export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, userId }) => {
   const limit = perPage;
@@ -58,4 +59,18 @@ export const updateContact = async (contactId, payload) => {
 
 export const deleteContactById = async (contactId) => {
   return await ContactsList.findByIdAndDelete({ _id: contactId });
+};
+
+export const uploadContactAvatar = async (contactId, file) => {
+  const url = await saveFile(file);
+
+  const contact = await ContactsList.findByIdAndUpdate(
+    contactId,
+    {
+      photo: url,
+    },
+    { new: true },
+  );
+
+  return contact;
 };

@@ -6,13 +6,18 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/routerGlobal.js';
 import cookieParser from "cookie-parser";
 import { ENV_VARS } from './constants/envVar.js';
+import { PERMANENT_UPLOAD_DIR } from './constants/path.js';
 
 const PORT = Number(getEnvVar(ENV_VARS.PORT, 3000));
 
 export function setupServer() {
   const app = express();
 
-  app.use(express.json());
+  app.use(express.json({
+    type: ['application/json', 'application/vnd.api+json'],
+    limit: '100kb',
+  }));
+  app.use('/uploads', express.static(PERMANENT_UPLOAD_DIR));
   app.use(cors());
   app.use(cookieParser());
 

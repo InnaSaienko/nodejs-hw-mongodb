@@ -3,7 +3,7 @@ import {
   deleteContactById,
   getAllContacts,
   getContactById,
-  updateContact,
+  updateContact, uploadContactAvatar,
 } from '../services/contactService.js';
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
@@ -86,4 +86,15 @@ export const deleteContactController = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+export const uploadContactAvatarController = async (req, res,) => {
+const { contactId } = req.params;
+const contact = await uploadContactAvatar(contactId, req.file);
+
+  res.json({
+    status: 200,
+    message: `Successfully updated contact with id ${req.params.contactId} !`,
+    data: contact,
+  });
 };
