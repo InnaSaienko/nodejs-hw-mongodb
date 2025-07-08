@@ -2,11 +2,11 @@ import { ContactsList } from '../db/models/contactSchema.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import createHttpError from 'http-errors';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, parentId }) => {
+export const getAllContacts = async ({ page, perPage, sortBy, sortOrder, filter = {}, userId }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const queryConditions = { parentId };
+  const queryConditions = { userId };
 
   if (filter.contactType !== null) {
     queryConditions.contactType = filter.contactType;
