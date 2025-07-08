@@ -12,6 +12,7 @@ import Handlebars from 'handlebars';
 import * as path from 'node:path';
 import fs from 'fs/promises';
 import { TEMPLATE_DIR } from '../constants/path.js';
+import { getFullNameFromGoogleTokenPayload, validateCode } from '../utils/googleOAuth2.js';
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -130,4 +131,28 @@ export const resetPassword = async ({ token, password }) => {
 
   await UsersCollection.findByIdAndUpdate(tokenPayload.sub, { password: hashedPassword });
   await SessionsCollection.findOneAndDelete({ userId: tokenPayload.sub });
+};
+
+export const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+  if (!payload) throw createHttpError(401);
+
+  let user = await UsersCollection.findOne({ email: payload.email });
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await UsersCollection.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password,
+      role: 'parent',
+    });
+  }
+
+  const newSession = createSession();
+
+  return await SessionsCollection.create({
+    userId: user._id,
+    ...newSession,
+  });
 };
