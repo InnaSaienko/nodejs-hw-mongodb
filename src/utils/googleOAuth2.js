@@ -13,7 +13,7 @@ const googleOAuthClient = new OAuth2Client({
   clientSecret: getEnvVar('GOOGLE_AUTH_CLIENT_SECRET'),
   redirectUri: oauthConfig.web.redirect_uris[0], //redirected after authentication.
 });
-
+// scope specifies what permissions are requested. In this case access to user's email and user's profile.
 export const generateAuthUrl = () =>
   googleOAuthClient.generateAuthUrl({
     scope: [
