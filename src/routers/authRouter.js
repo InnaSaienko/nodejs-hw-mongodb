@@ -3,6 +3,7 @@ import {loginUserSchema, registerUserSchema} from "../validation/validationSchem
 import {validateBody} from "../validation/validateBody.js";
 import {ctrlWrapper} from "../utils/ctrlWrapper.js";
 import {
+    getGoogleOAuthUrlController,
     loginUserController,
     logoutUserController,
     refreshUserSessionController,
@@ -36,5 +37,7 @@ authRouter.post(
   validateBody(resetPasswordValidationSchema),
   resetPasswordController,
 );
+
+authRouter.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
 
 export default authRouter;
