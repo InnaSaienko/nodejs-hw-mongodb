@@ -27,7 +27,6 @@ export const registerUserController = async (req, res) => {
     data: user,
   });
 };
-
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
   setupSessionCookies(res, session);
@@ -40,7 +39,6 @@ export const loginUserController = async (req, res) => {
     },
   });
 };
-
 export const logoutUserController = async (req, res) => {
   const { sessionId, refreshToken } = req.cookies;
   await logoutUser(sessionId, refreshToken);
@@ -50,7 +48,6 @@ export const logoutUserController = async (req, res) => {
 
   res.status(204).send();
 };
-
 export const refreshUserSessionController = async (req, res) => {
 
   const session = await refreshUsersSession({
@@ -69,7 +66,6 @@ export const refreshUserSessionController = async (req, res) => {
   });
 
 };
-
 export const requestResetPasswordByEmailController = async (req, res) => {
   const { email } = req.body;
   await requestResetPasswordByEmail(email);
@@ -87,5 +83,15 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password has been successfully reset.',
     data: {},
+  });
+};
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
   });
 };
