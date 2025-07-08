@@ -8,7 +8,7 @@ const contactSchema = new mongoose.Schema({
     contactType: {
       type: String, enum: ['work', 'home', 'personal'], required: true, default: 'personal',
     },
-    parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     photo: { type: String, required: true },
   },
   { timestamps: true, versionKey: false }, // add keys and value createdAt and updatedAt

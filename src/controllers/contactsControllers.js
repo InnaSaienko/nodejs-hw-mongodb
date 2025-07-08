@@ -15,9 +15,9 @@ export const getContactsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
-  const parentId = req.user._id;
+  const userId = req.user._id;
   try {
-    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder, filter, parentId });
+    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder, filter, userId });
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
@@ -46,14 +46,14 @@ export const getContactsByIdController = async (req, res) => {
 export const createContactController = async (req, res, next) => {
   try {
     const { file, body, user } = req;
-    const parentId = user._id;
+    const userId = user._id;
     const photo = file;
     let photoUrl;
     if (photo) {
       photoUrl = await saveFile(photo);
     }
 
-    const contact = await createContact({...body, parentId, photo: photoUrl });
+    const contact = await createContact({...body, userId, photo: photoUrl });
     res.status(201).json({
       status: 201,
       message: `Successfully created a contact!`,
