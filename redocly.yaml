@@ -1,0 +1,21 @@
+# Configuration for working with redocly CLI. It allows you to configure the documentation generation parameters for the API, including setting styles, fonts, themes, etc. With this file, we can easily manage the project parameters without having to change the code. // Yet Another Markup Language
+
+apis:
+  sample@v1:
+    root: docs/openapi.yaml
+extends:
+  - recommended
+rules:
+  no-unused-components: error
+theme:
+  openapi:
+    htmlTemplate: ./docs/index.html
+    theme:
+      colors:
+        primary:
+          main: '#32329f'
+    generateCodeSamples:
+      languages: # Array of language config objects; indicates in which languages to generate code samples.
+        - lang: curl
+        - lang: Node.js
+        - lang: JavaScript
