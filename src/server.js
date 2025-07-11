@@ -7,6 +7,7 @@ import router from './routers/routerGlobal.js';
 import cookieParser from "cookie-parser";
 import { ENV_VARS } from './constants/envVar.js';
 import { PERMANENT_UPLOAD_DIR } from './constants/path.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(getEnvVar(ENV_VARS.PORT, 3000));
 
@@ -18,6 +19,7 @@ export function setupServer() {
     limit: '100kb',
   }));
   app.use('/uploads', express.static(PERMANENT_UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
   app.use(cors());
   app.use(cookieParser());
 
