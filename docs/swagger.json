@@ -12,9 +12,6 @@
   "servers": [
     {
       "url": "http://localhost:3000"
-    },
-    {
-      "url": "https://example.com/api/v1"
     }
   ],
   "tags": [
@@ -190,7 +187,7 @@
         ],
         "summary": "Create contact",
         "operationId": "createContact",
-        "description": "Create a contact with payload",
+        "description": "Create a contact",
         "security": [
           {
             "bearerAuth": []
@@ -204,8 +201,6 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "email",
-                  "isFavourite",
                   "contactType",
                   "userId",
                   "photo"
@@ -214,88 +209,49 @@
                   "name": {
                     "description": "Contact's name",
                     "type": "string",
-                    "required": true,
-                    "example": "John Doe",
-                    "phoneNumber": {
-                      "description": "Contact's phone number",
-                      "type": "string",
-                      "required": true,
-                      "example": "123-456-7890"
-                    },
-                    "email": {
-                      "description": "Contact's email (optional)",
-                      "type": "string",
-                      "required": false,
-                      "example": "john.doe@example.com"
-                    },
-                    "isFavourite": {
-                      "description": "Whether the contact is a favorite",
-                      "type": "boolean",
-                      "default": false,
-                      "example": false
-                    },
-                    "contactType": {
-                      "description": "Type of contact",
-                      "type": "string",
-                      "enum": [
-                        "work",
-                        "home",
-                        "personal"
-                      ],
-                      "required": true,
-                      "default": "personal"
-                    },
-                    "userId": {
-                      "description": "Contact's user id (referring to User model)",
-                      "type": "string",
-                      "required": true,
-                      "example": "65e4decdd286b30065d54af9"
-                    },
-                    "photo": {
-                      "description": "Link to contact's photo",
-                      "type": "string",
-                      "format": "binary",
-                      "required": true,
-                      "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
-                    }
+                    "example": "John Doe"
                   },
-                  "responses": {
-                    "201": {
-                      "description": "Creates a student",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "required": [
-                              "status",
-                              "message",
-                              "data"
-                            ],
-                            "properties": {
-                              "status": {
-                                "type": "integer",
-                                "example": 201
-                              },
-                              "message": {
-                                "type": "string",
-                                "example": "Successfully created a contact!"
-                              },
-                              "data": {
-                                "type": "object",
-                                "$ref": "../../components/schemas/contact.yaml"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "401": {
-                      "$ref": "../../components/responses/401.yaml"
-                    }
+                  "phoneNumber": {
+                    "description": "Contact's phone number",
+                    "type": "string",
+                    "example": "345-567-8899"
+                  },
+                  "email": {
+                    "description": "Contact's email (optional)",
+                    "type": "string",
+                    "example": "johnDoe@test.com"
+                  },
+                  "isFavourite": {
+                    "description": "Is contact in favourites",
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "contactType": {
+                    "description": "Type of contact",
+                    "type": "string",
+                    "enum": [
+                      "work",
+                      "home",
+                      "personal"
+                    ],
+                    "example": "personal"
+                  },
+                  "photo": {
+                    "description": "Contact's photo file",
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/201"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
