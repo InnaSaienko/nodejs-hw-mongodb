@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://nodejs-hw-mongodb-mew5.onrender.com"
     }
   ],
   "tags": [
@@ -202,8 +202,7 @@
                   "name",
                   "phoneNumber",
                   "contactType",
-                  "userId",
-                  "photo"
+                  "userId"
                 ],
                 "properties": {
                   "name": {
