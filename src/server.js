@@ -2,16 +2,21 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-import contacsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import router from "./routers/routerGlobal.js";
+import cookieParser from "cookie-parser";
 
-const PORT = Number(getEnvVar('PORT', 3000));
+const PORT = Number(getEnvVar('PORT', 5173));
 
-export function setupServer() {
+export const setupServer = () => {
   const app = express();
 
   app.use(express.json());
-  app.use(cors());
+  app.use(cors({
+    origin: 'http://localhost:3000', // your frontend origin
+    credentials: true,
+  }));
+  app.use(cookieParser());
 
   app.use(
     pino({
@@ -27,11 +32,11 @@ export function setupServer() {
     });
   });
 
-  app.use('/contacts', contacsRouter);
-  // app.use('*', notFoundHandler);
+  app.use(router);
+
   app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
-}
+};
